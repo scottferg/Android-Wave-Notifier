@@ -14,6 +14,7 @@ public class WaveNotifierPreferencesActivity extends PreferenceActivity {
     private static final String TAG = "WaveNotifier";
     private static final String EDIT_TEXT_USERNAME = "usernamePref";
     private static final String EDIT_TEXT_PASSWORD = "passwordPref";
+    private static final WaveNotifierApplication mApplication = WaveNotifierApplication.getInstance();
 
     /** Called when the activity is first created. */
     @Override
@@ -24,23 +25,22 @@ public class WaveNotifierPreferencesActivity extends PreferenceActivity {
 
         findPreference("usernamePref").setOnPreferenceChangeListener(credentialChanged);
         findPreference("passwordPref").setOnPreferenceChangeListener(credentialChanged);
-
-        // Start the service if it's not already started
-        WaveNotifierApplication.getInstance().initNotifier();
     }
 
     Preference.OnPreferenceChangeListener credentialChanged = new Preference.OnPreferenceChangeListener() {
 
 		public boolean onPreferenceChange(Preference aPreference, Object aValue) {
 
-            Log.i(TAG, (String) aValue);
+            Log.i(TAG, aPreference.getKey() + ": " + (String) aValue);
             
-            SharedPreferences prefs = getSharedPreferences("WaveNotifierPrefs", 0);
+            SharedPreferences prefs = WaveNotifierPreferencesActivity.this.getSharedPreferences("WaveNotifierPrefs", 0);
             Editor prefsEditor = prefs.edit();
 
-            prefsEditor.putString("usernamePref", (String) aValue);
-            prefsEditor.putString("passwordPref", (String) aValue);
+            prefsEditor.putString(aPreference.getKey(), (String) aValue);
             prefsEditor.commit();
+
+            // Start the service if it's not already started
+            WaveNotifierApplication.getInstance().initNotifier(WaveNotifierPreferencesActivity.this);
 
 			return true;
 		}

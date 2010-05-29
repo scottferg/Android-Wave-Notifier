@@ -9,8 +9,9 @@ import android.util.Log;
 public class WaveNotifierApplication extends Application {
 
     public static WaveNotifierApplication sInstance = null;
+
     private static final String TAG = "WaveNotifierApplication";
-    
+
     public static WaveNotifierApplication getInstance() {
 
         if (sInstance != null) {
@@ -24,23 +25,18 @@ public class WaveNotifierApplication extends Application {
     public void onCreate() {
 
         sInstance = this;
-
-        initNotifier();
     }
 
-    public void initNotifier() {
+    public void initNotifier(Context aContext) {
 
-        SharedPreferences settings = getSharedPreferences("WaveNotifierPrefs", 0);
+        SharedPreferences settings = aContext.getSharedPreferences("WaveNotifierPrefs", 0);
         String username = settings.getString("usernamePref", "");
         String password = settings.getString("passwordPref", "");
 
-        Log.i(TAG, username);
-        Log.i(TAG, password);
-
-        Intent service = new Intent(this, WaveNotifierService.class);
+        Intent service = new Intent(aContext, WaveNotifierService.class);
         service.putExtra("username", username);
         service.putExtra("password", password);
 
-        startService(service);
+        aContext.startService(service);
     }
 }
