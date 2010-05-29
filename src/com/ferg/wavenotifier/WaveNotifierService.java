@@ -20,6 +20,9 @@ public class WaveNotifierService extends Service {
     private Timer mTimer;
     private NotificationManager mNotificationManager;
 
+    private String mUsername;
+    private String mPassword;
+
     // 30 second hard-coded refresh rate
     private static final int UPDATE_INTERVAL = 1800000;
     private static final String TAG = "WaveNotifierStatus";
@@ -31,6 +34,21 @@ public class WaveNotifierService extends Service {
 
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mTimer = new Timer();
+
+    }
+
+    public int onStartCommand(Intent aIntent, int aFlags, int aStartId) {
+        
+        onStart(aIntent, aStartId);
+
+        return 2;
+    }
+
+    @Override
+    public void onStart(Intent aIntent, int aStartId) {
+
+        mUsername = aIntent.getStringExtra("username");
+        mPassword = aIntent.getStringExtra("password");
 
         runNotifier();
     }
@@ -72,8 +90,8 @@ public class WaveNotifierService extends Service {
         final Pattern wavePattern = Pattern.compile("SID=([A-z0-9_-]+)");
 
         params.put("accountType", "GOOGLE");
-        params.put("Email", "USERNAME");
-        params.put("Passwd", "PASSWORD");
+        params.put("Email", mUsername);
+        params.put("Passwd", mPassword);
         params.put("service", "wave");
         params.put("source", "wave-notifier-android");
 
@@ -86,6 +104,10 @@ public class WaveNotifierService extends Service {
             Log.i(TAG, "Whoops!");
         }
         */
+
+        // TODO: If the credentials are bad, popup an error notification and
+        // kill the service.  The service will restart when the user re-enters
+        // their credentials.
 
         Matcher m = authPattern.matcher(response);
         String auth = "";

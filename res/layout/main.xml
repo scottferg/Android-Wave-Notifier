@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="Hello World, WaveNotifierPreferencesActivity"
-    />
-</LinearLayout>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Settings">
+        <EditTextPreference
+            android:name="Username Preference"
+            android:summary="Enter your Google Wave username"
+            android:defaultValue="None"
+            android:title="Username"
+            android:key="usernamePref"
+            />    
+        <EditTextPreference
+            android:name="Password Preference"
+            android:summary="Enter your Google Wave password"
+            android:defaultValue="None"
+            android:title="Password"
+            android:key="passwordPref"
+            android:password="true"
+            />    
+    </PreferenceCategory>
+</PreferenceScreen>
 
